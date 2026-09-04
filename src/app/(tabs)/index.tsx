@@ -183,8 +183,8 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: { gap: Spacing.one, paddingTop: Spacing.two },
-  greeting: { fontSize: 28, fontWeight: '700' },
+  header: { gap: Spacing.one, paddingTop: Spacing.three },
+  greeting: { fontSize: 28, fontWeight: '700', lineHeight: 36 },
   pulseCard: {
     padding: Spacing.four,
     borderRadius: BorderRadius.xl,
@@ -192,14 +192,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.two,
   },
-  pulseEmoji: { fontSize: 36 },
+  pulseEmoji: { fontSize: 36, lineHeight: 44 },
   pulseTitle: { fontSize: 20 },
   pulseSubtitle: { textAlign: 'center' },
   stepWrap: { width: '100%', gap: Spacing.three, alignItems: 'stretch' },
   stepQuestion: { fontSize: 16, textAlign: 'center' },
   stepButtons: { flexDirection: 'row', gap: Spacing.two },
   doneWrap: { alignItems: 'center', gap: Spacing.two, width: '100%' },
-  doneEmoji: { fontSize: 48 },
+  doneEmoji: { fontSize: 48, lineHeight: 58 },
   doneText: { textAlign: 'center' },
   quickGrid: { gap: Spacing.two },
   moodPreview: {
@@ -210,6 +210,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   moodDot: { alignItems: 'center', gap: 4 },
-  moodEmoji: { fontSize: 28 },
+  moodEmoji: { fontSize: 28, lineHeight: 36 },
   moodDate: { fontSize: 11 },
 });

@@ -270,7 +270,13 @@ export const MEDITATION_STEPS = [
   'When ready, open your eyes and notice how you feel.',
 ];
 
-export const RELAXATION_SOUNDS = [
+import type { RelaxationSoundId } from '@/constants/sounds';
+
+export const RELAXATION_SOUNDS: {
+  id: RelaxationSoundId;
+  name: string;
+  emoji: string;
+}[] = [
   { id: 'rain', name: 'Gentle Rain', emoji: '🌧️' },
   { id: 'ocean', name: 'Ocean Waves', emoji: '🌊' },
   { id: 'forest', name: 'Forest Birds', emoji: '🌲' },

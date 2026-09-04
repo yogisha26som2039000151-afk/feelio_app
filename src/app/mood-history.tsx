@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   patterns: { padding: Spacing.three, borderRadius: BorderRadius.lg, gap: Spacing.two },
   patternRow: { flexDirection: 'row', gap: Spacing.three },
   patternItem: { alignItems: 'center', gap: 4 },
-  patternEmoji: { fontSize: 28 },
+  patternEmoji: { fontSize: 28, lineHeight: 36 },
   entry: {
     flexDirection: 'row',
     padding: Spacing.three,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: Spacing.three,
   },
-  emoji: { fontSize: 36 },
+  emoji: { fontSize: 36, lineHeight: 44 },
   entryContent: { flex: 1, gap: 4 },
   note: { fontStyle: 'italic', marginTop: 4 },
 });

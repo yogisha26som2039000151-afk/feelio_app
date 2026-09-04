@@ -10,12 +10,12 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { FeelioButton } from '@/components/feelio/feelio-button';
+import { RelaxationSounds } from '@/components/feelio/relaxation-sounds';
 import { ScreenContainer } from '@/components/feelio/screen-container';
 import { ThemedText } from '@/components/themed-text';
 import {
   GROUNDING_STEPS,
   MEDITATION_STEPS,
-  RELAXATION_SOUNDS,
   RELIEF_ACTIVITIES,
 } from '@/constants/data';
 import { BorderRadius, Spacing } from '@/constants/theme';
@@ -33,7 +33,6 @@ export default function ReliefActivityScreen() {
   const [active, setActive] = useState(false);
   const [groundingStep, setGroundingStep] = useState(0);
   const [meditationStep, setMeditationStep] = useState(0);
-  const [selectedSound, setSelectedSound] = useState<string | null>(null);
 
   const scale = useSharedValue(1);
 
@@ -159,26 +158,7 @@ export default function ReliefActivityScreen() {
         </View>
       )}
 
-      {activity.type === 'sounds' && (
-        <View style={styles.soundsWrap}>
-          {RELAXATION_SOUNDS.map((sound) => (
-            <FeelioButton
-              key={sound.id}
-              title={`${sound.emoji} ${sound.name}`}
-              variant={selectedSound === sound.id ? 'primary' : 'outline'}
-              onPress={() => setSelectedSound(sound.id)}
-            />
-          ))}
-          {selectedSound && (
-            <View style={[styles.playing, { backgroundColor: theme.primaryLight }]}>
-              <ThemedText type="smallBold">Now playing: {RELAXATION_SOUNDS.find((s) => s.id === selectedSound)?.name}</ThemedText>
-              <ThemedText type="small" themeColor="textSecondary">
-                Close your eyes and let the sounds wash over you. (Audio playback coming soon)
-              </ThemedText>
-            </View>
-          )}
-        </View>
-      )}
+      {activity.type === 'sounds' && <RelaxationSounds />}
 
       {(activity.type === 'stretch' || activity.type === 'gratitude') && (
         <View style={[styles.staticActivity, { backgroundColor: theme.backgroundElement }]}>
@@ -213,7 +193,5 @@ const styles = StyleSheet.create({
   groundStep: { padding: Spacing.three, borderRadius: BorderRadius.lg, borderWidth: 2, gap: 4 },
   meditationWrap: { gap: Spacing.three, alignItems: 'center' },
   meditationCard: { padding: Spacing.four, borderRadius: BorderRadius.lg, width: '100%' },
-  soundsWrap: { gap: Spacing.two },
-  playing: { padding: Spacing.three, borderRadius: BorderRadius.lg, gap: Spacing.one },
   staticActivity: { padding: Spacing.four, borderRadius: BorderRadius.lg, gap: Spacing.three },
 });

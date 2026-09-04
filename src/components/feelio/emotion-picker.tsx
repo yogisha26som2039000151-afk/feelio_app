@@ -1,5 +1,5 @@
 import * as Haptics from 'expo-haptics';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { EMOTIONS } from '@/constants/data';
@@ -30,7 +30,7 @@ export function EmotionPicker({ selected, onSelect }: EmotionPickerProps) {
               { backgroundColor: theme.card, borderColor: isSelected ? theme.primary : theme.border },
               isSelected && { backgroundColor: theme.primaryLight },
             ]}>
-            <ThemedText style={styles.emoji}>{emotion.emoji}</ThemedText>
+            <Text style={styles.emoji}>{emotion.emoji}</Text>
             <ThemedText type="small" style={styles.label}>{emotion.label}</ThemedText>
           </Pressable>
         );
@@ -53,8 +53,9 @@ const styles = StyleSheet.create({
     padding: Spacing.two,
     borderRadius: BorderRadius.lg,
     borderWidth: 2,
+    overflow: 'visible',
     gap: Spacing.one,
   },
-  emoji: { fontSize: 32 },
+  emoji: { fontSize: 32, lineHeight: 40, textAlign: 'center' },
   label: { fontSize: 12, textAlign: 'center' },
 });
