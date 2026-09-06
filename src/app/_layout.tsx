@@ -51,6 +51,7 @@ export default function RootLayout() {
           <Stack.Screen name="learn-topic" options={{ headerShown: true, title: 'Article' }} />
           <Stack.Screen name="growth" options={{ headerShown: true, title: 'Personal Growth' }} />
           <Stack.Screen name="privacy" options={{ headerShown: true, title: 'Privacy & Safety' }} />
+          <Stack.Screen name="survey-export" options={{ headerShown: true, title: 'Survey report' }} />
         </Stack>
       </AppDataProvider>
     </ThemeProvider>

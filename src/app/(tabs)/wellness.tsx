@@ -95,7 +95,7 @@ export default function WellnessScreen() {
 
 const styles = StyleSheet.create({
   header: { gap: Spacing.one },
-  title: { fontSize: 26, fontWeight: '700' },
+  title: { fontSize: 26, fontWeight: '700', lineHeight: 34 },
   grid: { gap: Spacing.two },
   topicRow: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
   topicChip: {
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.one,
     borderRadius: BorderRadius.full,
   },
-  topicEmoji: { fontSize: 16 },
+  topicEmoji: { fontSize: 16, lineHeight: 22 },
   topicLabel: { fontSize: 13 },
   growthPreview: {
     padding: Spacing.three,
@@ -116,5 +116,5 @@ const styles = StyleSheet.create({
   },
   growthStats: { flexDirection: 'row', justifyContent: 'space-around' },
   stat: { alignItems: 'center', gap: 4 },
-  statNum: { fontSize: 28, fontWeight: '700' },
+  statNum: { fontSize: 28, fontWeight: '700', lineHeight: 36 },
 });

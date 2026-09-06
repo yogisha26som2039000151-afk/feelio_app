@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ChipSelector } from '@/components/feelio/chip-selector';
 import { EmotionPicker } from '@/components/feelio/emotion-picker';
 import { FeatureCard } from '@/components/feelio/feature-card';
 import { FeelioButton } from '@/components/feelio/feelio-button';
+import { ParticipantSwitcher } from '@/components/feelio/participant-switcher';
 import { ScreenContainer } from '@/components/feelio/screen-container';
 import { SectionHeader } from '@/components/feelio/section-header';
 import { ThemedText } from '@/components/themed-text';
@@ -18,17 +19,25 @@ type PulseStep = 'feeling' | 'affecting' | 'help' | 'done';
 
 export default function HomeScreen() {
   const theme = useTheme();
-  const { data, addPulse } = useAppDataContext();
+  const { data, addPulse, currentParticipant, dataRevision, participants, switchParticipant } =
+    useAppDataContext();
   const [step, setStep] = useState<PulseStep>('feeling');
   const [feeling, setFeeling] = useState('');
   const [affecting, setAffecting] = useState<string[]>([]);
   const [help, setHelp] = useState<string[]>([]);
+  const [editingPulse, setEditingPulse] = useState(false);
+
+  useEffect(() => {
+    setStep('feeling');
+    setFeeling('');
+    setAffecting([]);
+    setHelp([]);
+    setEditingPulse(false);
+  }, [currentParticipant?.id, dataRevision]);
 
   const todayPulse = data.pulseHistory.find(
     (p) => p.date.split('T')[0] === new Date().toISOString().split('T')[0],
   );
-
-  const [editingPulse, setEditingPulse] = useState(false);
   const showPulseDone = todayPulse && !editingPulse && step !== 'affecting' && step !== 'help';
 
   const handleSavePulse = async () => {
@@ -64,6 +73,14 @@ export default function HomeScreen() {
         <ThemedText type="small" themeColor="textSecondary">
           Your safe space for mental wellness
         </ThemedText>
+        <ThemedText type="small" themeColor="textSecondary">
+          Tap a person to switch profiles
+        </ThemedText>
+        <ParticipantSwitcher
+          participants={participants}
+          currentId={currentParticipant?.id}
+          onSelect={switchParticipant}
+        />
       </View>
 
       <View style={[styles.pulseCard, { backgroundColor: theme.primaryLight, borderColor: theme.primary }]}>
@@ -113,7 +130,7 @@ export default function HomeScreen() {
             <ThemedText type="small" themeColor="textSecondary" style={styles.doneText}>
               {help.includes('Breathing exercise') && 'Try a quick breathing exercise in Quick Relief.'}
               {help.includes('Journal my thoughts') && 'Your journal is ready whenever you need it.'}
-              {help.includes('Talk to someone') && 'Talk Space is here if you want to connect.'}
+              {help.includes('Talk to someone') && 'Reach out to someone you trust, or use I Need Help Now for support resources.'}
               {!help.length && 'Take things one step at a time. You\'re doing great.'}
             </ThemedText>
           </View>

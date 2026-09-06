@@ -17,7 +17,6 @@ const TAB_ITEMS = [
   { name: 'home', href: '/', label: 'Home' },
   { name: 'mood', href: '/mood', label: 'Mood' },
   { name: 'journal', href: '/journal', label: 'Journal' },
-  { name: 'talk', href: '/talk', label: 'Talk' },
   { name: 'wellness', href: '/wellness', label: 'Wellness' },
 ] as const;
 

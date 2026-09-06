@@ -77,17 +77,6 @@ export default function HelpScreen() {
         </View>
       ))}
 
-      <SectionHeader title="Professional Support" />
-      <FeatureCard
-        title="Talk to a counselor"
-        description="Connect with a mental health professional"
-        emoji="🩺"
-        onPress={() => {
-          router.dismiss();
-          router.push('/talk');
-        }}
-      />
-
       <FeelioButton title="Close" variant="outline" onPress={() => router.dismiss()} />
     </ScreenContainer>
   );

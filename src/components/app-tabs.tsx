@@ -36,14 +36,6 @@ export default function AppTabs() {
         />
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name="talk">
-        <NativeTabs.Trigger.Label>Talk</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/explore.png')}
-          renderingMode="template"
-        />
-      </NativeTabs.Trigger>
-
       <NativeTabs.Trigger name="wellness">
         <NativeTabs.Trigger.Label>Wellness</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon

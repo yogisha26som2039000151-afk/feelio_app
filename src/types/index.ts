@@ -63,3 +63,14 @@ export type AppData = {
   trustedContact?: string;
   anonymousMode: boolean;
 };
+
+export type Participant = {
+  id: string;
+  label: string;
+  createdAt: string;
+};
+
+export type SurveyMeta = {
+  currentParticipantId: string;
+  participants: Participant[];
+};

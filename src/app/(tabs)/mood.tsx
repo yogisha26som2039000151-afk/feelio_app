@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { ChipSelector } from '@/components/feelio/chip-selector';
@@ -15,11 +15,18 @@ import { useTheme } from '@/hooks/use-theme';
 
 export default function MoodScreen() {
   const theme = useTheme();
-  const { data, addMood } = useAppDataContext();
+  const { data, addMood, currentParticipant, dataRevision } = useAppDataContext();
   const [emotion, setEmotion] = useState('');
   const [triggers, setTriggers] = useState<string[]>([]);
   const [note, setNote] = useState('');
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setEmotion('');
+    setTriggers([]);
+    setNote('');
+    setSaved(false);
+  }, [currentParticipant?.id, dataRevision]);
 
   const todayEntry = data.moods.find(
     (m) => m.date.split('T')[0] === new Date().toISOString().split('T')[0],
@@ -143,7 +150,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   weekItem: { alignItems: 'center', gap: 4 },
-  weekEmoji: { fontSize: 28 },
+  weekEmoji: { fontSize: 28, lineHeight: 36 },
   weekDay: { fontSize: 11 },
   patterns: { padding: Spacing.three, borderRadius: BorderRadius.lg, gap: Spacing.one },
 });

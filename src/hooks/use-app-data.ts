@@ -1,23 +1,43 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { defaultAppData, loadAppData, saveAppData } from '@/lib/storage';
-import type { AppData, JournalEntry, MoodEntry, PulseEntry } from '@/types';
+import {
+  createDefaultAppData,
+  loadAllSurveyExports,
+  loadAppData,
+  loadSurveyMeta,
+  MAX_PARTICIPANTS,
+  resetAppData,
+  saveAppData,
+  saveSurveyMeta,
+  wipeAllFeelioStorage,
+} from '@/lib/storage';
+import type { AppData, JournalEntry, MoodEntry, Participant, PulseEntry } from '@/types';
 
 export function useAppData() {
-  const [data, setData] = useState<AppData>(defaultAppData);
+  const [data, setData] = useState<AppData>(createDefaultAppData());
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [currentParticipantId, setCurrentParticipantId] = useState('p1');
+  const [dataRevision, setDataRevision] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadAppData().then((loaded) => {
+    (async () => {
+      const meta = await loadSurveyMeta();
+      const loaded = await loadAppData(meta.currentParticipantId);
+      setParticipants(meta.participants);
+      setCurrentParticipantId(meta.currentParticipantId);
       setData(loaded);
       setLoading(false);
-    });
+    })();
   }, []);
 
-  const persist = useCallback(async (next: AppData) => {
-    setData(next);
-    await saveAppData(next);
-  }, []);
+  const persist = useCallback(
+    async (next: AppData, participantId = currentParticipantId) => {
+      setData(next);
+      await saveAppData(participantId, next);
+    },
+    [currentParticipantId],
+  );
 
   const addMood = useCallback(
     async (entry: MoodEntry) => {
@@ -103,9 +123,86 @@ export function useAppData() {
     [data, persist],
   );
 
+  const switchParticipant = useCallback(
+    async (participantId: string) => {
+      if (participantId === currentParticipantId) return;
+      await saveAppData(currentParticipantId, data);
+      const nextData = await loadAppData(participantId);
+      const nextMeta = {
+        currentParticipantId: participantId,
+        participants,
+      };
+      await saveSurveyMeta(nextMeta);
+      setCurrentParticipantId(participantId);
+      setData(nextData);
+    },
+    [currentParticipantId, data, participants],
+  );
+
+  const addParticipant = useCallback(
+    async (label: string) => {
+      if (participants.length >= MAX_PARTICIPANTS) return false;
+      const trimmed = label.trim() || `Participant ${participants.length + 1}`;
+      const participant: Participant = {
+        id: `p${Date.now()}`,
+        label: trimmed,
+        createdAt: new Date().toISOString(),
+      };
+      const nextParticipants = [...participants, participant];
+      const nextData = createDefaultAppData();
+      await saveAppData(currentParticipantId, data);
+      await saveAppData(participant.id, nextData);
+      await saveSurveyMeta({ currentParticipantId: participant.id, participants: nextParticipants });
+      setParticipants(nextParticipants);
+      setCurrentParticipantId(participant.id);
+      setData(nextData);
+      return true;
+    },
+    [currentParticipantId, data, participants],
+  );
+
+  const resetCurrentParticipant = useCallback(async () => {
+    const fresh = await resetAppData(currentParticipantId);
+    setData(fresh);
+    setDataRevision((n) => n + 1);
+  }, [currentParticipantId]);
+
+  const clearAllParticipants = useCallback(async () => {
+    const meta = await wipeAllFeelioStorage();
+    setParticipants(meta.participants);
+    setCurrentParticipantId(meta.currentParticipantId);
+    setData(createDefaultAppData());
+    setDataRevision((n) => n + 1);
+  }, []);
+
+  const exportAllSurveyData = useCallback(async () => {
+    await saveAppData(currentParticipantId, data);
+    const rows = await loadAllSurveyExports();
+    return {
+      exportedAt: new Date().toISOString(),
+      participants: rows.map(({ participant, data: appData }) => ({
+        id: participant.id,
+        label: participant.label,
+        createdAt: participant.createdAt,
+        moods: appData.moods,
+        journal: appData.journal,
+        pulseHistory: appData.pulseHistory,
+        goals: appData.goals,
+        badges: appData.badges,
+        anonymousMode: appData.anonymousMode,
+      })),
+    };
+  }, [currentParticipantId, data]);
+
+  const currentParticipant = participants.find((p) => p.id === currentParticipantId) ?? null;
+
   return {
     data,
     loading,
+    participants,
+    currentParticipant,
+    dataRevision,
+    maxParticipants: MAX_PARTICIPANTS,
     addMood,
     addJournal,
     addPulse,
@@ -113,5 +210,10 @@ export function useAppData() {
     earnBadge,
     setTrustedContact,
     setAnonymousMode,
+    switchParticipant,
+    addParticipant,
+    resetCurrentParticipant,
+    clearAllParticipants,
+    exportAllSurveyData,
   };
 }
